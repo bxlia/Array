@@ -11,68 +11,67 @@ namespace Shooter
         static void Main(string[] args)
         {
             ConsoleKey key;
-            int x = 10, y = 10; // начальные координаты
+            int x = 10, y = 10;
+            int consoleWidth = Console.WindowWidth;
+            int consoleHeight = Console.WindowHeight - 2; 
 
             Console.Clear();
+            Console.CursorVisible = false; 
+
             Console.SetCursorPosition(x, y);
             Console.Write("@");
-            Console.SetCursorPosition(0, 20);
-            Console.WriteLine($"Координаты: X={x}, Y={y}");
+
+            DisplayCoordinates(x, y);
 
             do
             {
                 key = Console.ReadKey(true).Key;
+                int oldX = x, oldY = y;
 
                 switch (key)
                 {
                     case ConsoleKey.W:
-                        y--;
-                        Console.WriteLine("Вперед");
+                    case ConsoleKey.UpArrow:
+                        if (y > 0) y--;
                         break;
                     case ConsoleKey.A:
-                        x--;
-                        Console.WriteLine("Влево");
+                    case ConsoleKey.LeftArrow:
+                        if (x > 0) x--;
                         break;
                     case ConsoleKey.D:
-                        x++;
-                        Console.WriteLine("Вправо");
+                    case ConsoleKey.RightArrow:
+                        if (x < consoleWidth - 1) x++;
                         break;
                     case ConsoleKey.S:
-                        y++;
-                        Console.WriteLine("Назад");
-                        break;
-                    case ConsoleKey.UpArrow:
-                        y--;
-                        Console.WriteLine("Вперед");
-                        break;
-                    case ConsoleKey.LeftArrow:
-                        x--;
-                        Console.WriteLine("Влево");
-                        break;
-                    case ConsoleKey.RightArrow:
-                        x++;
-                        Console.WriteLine("Вправо");
-                        break;
                     case ConsoleKey.DownArrow:
-                        y++;
-                        Console.WriteLine("Назад");
+                        if (y < consoleHeight - 1) y++;
                         break;
-                    case ConsoleKey.Spacebar: Console.WriteLine("Прыжок"); break;
-                    case ConsoleKey.Enter: Console.WriteLine("Огонь"); break;
-                    case ConsoleKey.Escape: Console.WriteLine("Выход"); break;
-                    default: Console.WriteLine("Error:\a:"); break;
                 }
 
-                // Обновляем позицию игрока
-                Console.Clear();
-                Console.SetCursorPosition(x, y);
-                Console.Write("@");
+                if (x != oldX || y != oldY)
+                {
+                    Console.SetCursorPosition(oldX, oldY);
+                    Console.Write(" ");
 
-                // Показываем координаты
-                Console.SetCursorPosition(0, 20);
-                Console.WriteLine($"Координаты: X={x}, Y={y}");
+                    Console.SetCursorPosition(x, y);
+                    Console.Write("@");
+                    DisplayCoordinates(x, y);
+                }
 
             } while (key != ConsoleKey.Escape);
+        }
+
+        static void DisplayCoordinates(int x, int y)
+        {
+            int currentLeft = Console.CursorLeft;
+            int currentTop = Console.CursorTop;
+
+            Console.SetCursorPosition(0, Console.WindowHeight - 2);
+            Console.Write(new string(' ', Console.WindowWidth)); 
+            Console.SetCursorPosition(0, Console.WindowHeight - 2);
+            Console.Write($"Координаты: X={x}, Y={y}");
+
+            Console.SetCursorPosition(currentLeft, currentTop);
         }
     }
 }
